@@ -1,18 +1,22 @@
 package bot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Move {
+/**
+ * A Move is something that can only be played in a Microboard.
+ *    The Microboard keeps track of moves that each player makes.
+ * @author RyanPachauri
+ * @version 5/26/16
+ */
+public class Move implements Comparable<Move> {
    
-   private final int row, col;
-   private int id;
-   private List<Move> moves;
+   public final int row, col, boardRow, boardCol, id;
+   int value;
 
-   public Move(int myRow, int myCol) {
+   public Move(int myRow, int myCol, int myBoardRow, int myBoardCol, int myId){
       this.row = myRow;
       this.col = myCol;
-      this.moves = new ArrayList<Move>();
+      this.boardRow = myBoardRow;
+      this.boardCol = myBoardCol;
+      this.id = myId;
    }
    
    /**
@@ -35,17 +39,22 @@ public class Move {
    
    /**
     * Returns a String representation of this object:
-    *    e.g.  "Move 00 by P1 lets P2 play at 10, 20, 01, 22"
+    *    e.g.  "Move 02 is played by P1 in board 11"
     */
    public String toString() {
       String result = "Move";
       result += this.col;
-      result += this.row + " by P" + this.id + " lets P";
-      result += Macroboard.calculateOppID(id) + " play at";
-      for (Move move : this.moves) {
-         result += " " + move.col;
-         result += move.row;
-      }
+      result += this.row + " is played by P" + this.id + " in board "
+            + this.boardCol;
+      result += this.boardRow;
       return result;
+   }
+
+   /**
+    * All we care about when comparing two moves are how they are valued.
+    */
+   @Override
+   public int compareTo(Move o) {
+      return ((Integer)this.value).compareTo(o.value);
    }
 }
