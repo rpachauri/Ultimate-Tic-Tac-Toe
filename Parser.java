@@ -31,7 +31,7 @@ import java.util.Scanner;
  * @author Jim van Eeden <jim@starapple.nl>, Joost de Meij <joost@starapple.nl>
  */
 public class Parser {
-   
+
    private Scanner scanner;
    private Bot bot;
 
@@ -62,7 +62,6 @@ public class Parser {
    }
    
    public void run() {
-      int round = 0;
       while (this.scanner.hasNextLine()) {
          String line = scanner.nextLine();
 
@@ -77,12 +76,10 @@ public class Parser {
                this.bot.setField(parts[3]);
             } else if (parts[2].equals("macroboard")) {
                this.bot.setMacroboard(parts[3]);
-            } else if (parts[2].equals("round")) {
-               round = Integer.parseInt(parts[3]);
             }
          } else if(parts[0].equals("action")) {
             if (parts[1].equals("move")) { /* move requested */
-               String move = this.bot.pickBestMove(round);
+               String move = this.bot.pickBestMove();
                System.out.println("place_move " + move);
             }
          }

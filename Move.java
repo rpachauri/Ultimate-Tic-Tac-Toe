@@ -39,14 +39,15 @@ public class Move implements Comparable<Move> {
    
    /**
     * Returns a String representation of this object:
-    *    e.g.  "Move 02 is played by P1 in board 11"
+    *    e.g.  "Move 02 is played by P1 in board 11 is valued at 0"
     */
    public String toString() {
-      String result = "Move";
+      String result = "Move ";
       result += this.col;
       result += this.row + " is played by P" + this.id + " in board "
             + this.boardCol;
-      result += this.boardRow;
+      result += this.boardRow + " is valued at ";
+      result += this.value;
       return result;
    }
 
@@ -55,6 +56,6 @@ public class Move implements Comparable<Move> {
     */
    @Override
    public int compareTo(Move o) {
-      return ((Integer)this.value).compareTo(o.value);
+      return ((Integer)o.value).compareTo(this.value);
    }
 }

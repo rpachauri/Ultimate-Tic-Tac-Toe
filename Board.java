@@ -1,5 +1,6 @@
 package bot;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,15 +40,14 @@ public abstract class Board<T> {
    
    @SuppressWarnings("unchecked")
    public Board(Class<?> classObject) {
-      this.board = (T[][]) new Object[Board.ROWS][Board.COLS];
+      this.board = (T[][]) Array.newInstance(classObject, Board.ROWS, Board.COLS);
       for (int row = 0; row < Board.ROWS; row++) {
          for (int col = 0; col < Board.COLS; col++) {
             try {
                if (classObject.equals(Integer.class)) {
                   this.board[row][col] = (T) new Integer(0);
                } else {
-                  T newInstance = (T)classObject.newInstance();
-                  this.board[row][col] = newInstance;
+                  this.board[row][col] = (T) classObject.newInstance();
                }
             } catch (InstantiationException | IllegalAccessException e) {
                e.printStackTrace();
@@ -63,7 +63,7 @@ public abstract class Board<T> {
     * @param col  location in this board
     * @return  the Object at the given location
     */
-   public Object get(int row, int col) {
+   public T get(int row, int col) {
       this.checkLocation(row, col);
       return this.board[row][col];
    }
@@ -355,7 +355,7 @@ public abstract class Board<T> {
       if (!this.isValidLocation(row, col)) {
          return false;
       }
-      return this.getID(row, col) == id || this.getID(row, col) == 0;
+      return this.getID(row, col) != Board.calculateOppID(id);
    }
    
    /**

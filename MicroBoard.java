@@ -42,9 +42,6 @@ public class Microboard extends Board<Integer> {
    public List<Move> getAvailableMoves(int boardRow, int boardCol, int newId) {
       //this method does not care about any of the given parameters
       //they are only important for creating Move
-      if (this.id != -1) {
-         throw new IllegalStateException();
-      }
       List<Move> moves = new ArrayList<Move>();
       for (int row = 0; row < Board.ROWS; row++) {
          for (int col = 0; col < Board.COLS; col++) {
@@ -59,8 +56,6 @@ public class Microboard extends Board<Integer> {
    /**
     * @Precondition: given location is a valid location; otherwise,
     *                   throws new IllegalStateException
-    *                id of this Microboard is -1; otherwise,
-    *                   throws new IllegalStateException
     *                given id is 0, 1, or 2; otherwise,
     *                   throws new IllegalArgumentException
     * @param row
@@ -69,9 +64,6 @@ public class Microboard extends Board<Integer> {
     */
    public void update(int row, int col, int newId) {
       super.checkLocation(row, col);
-      if (this.id != -1) {
-         throw new IllegalStateException();
-      }
       super.checkID(newId);
       this.board[row][col] = newId;
    }
@@ -102,7 +94,7 @@ public class Microboard extends Board<Integer> {
    String getRow(int row) {
       String result = "";
       for (int col = 0; col < Board.COLS; col++) {
-         result += String.valueOf(this.board[row][col]);
+         result += String.valueOf(this.board[row][col]) + ",";
       }
       return result;
    }

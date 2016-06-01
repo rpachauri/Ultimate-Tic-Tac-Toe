@@ -15,6 +15,7 @@ import java.util.Stack;
  */
 public class Bot {
    
+   private final int MAX_DEPTH = 10;
    private Macroboard board;
    public final int id;
 
@@ -31,9 +32,9 @@ public class Bot {
       this.board.updateBoards(newMacroboard);
    }
    
-   public String pickBestMove(int max) {
+   public String pickBestMove() {
       String result = "";
-      Move bestMove = this.pickBestMove(this.id, max);
+      Move bestMove = this.pickBestMove(this.id, this.MAX_DEPTH);
       if (bestMove != null) {
          int col = bestMove.boardCol * 3 + bestMove.col;
          result += col + " ";
@@ -47,47 +48,47 @@ public class Bot {
    
    /**
     * @Precondition: max is greater than 0
+    *                there is at least one available move; otherwise,
+    *                   throw an IllegalStateException
     * @param max
     * @return
     */
    public Move pickBestMove(int id, int max) {
       Stack<Move> moves = this.board.getAvailableMoves(id);
-      if (moves.size() > 0) {
-         if (max == 1) {//base case
-            Queue<Move> bestMoves = new PriorityQueue<Move>();
-            while (!moves.isEmpty()) {
-               Move move = moves.pop();
-               String boards = this.board.makeMove(move);
-               this.setValue(move);
-               this.board.unmakeMove(move, boards);
-               bestMoves.offer(move);
-            }
-            return bestMoves.remove();//returns best value move
-         } else {
-            int bestValue = Integer.MIN_VALUE;
-            Move bestMove = null;
-            //recursive backtracking
-            while (!moves.isEmpty()) {
-               Move move = moves.pop();
-               if (this.isWinningMove(move)) {
-                  return move;
-               }
-               //choose
-               String boards = this.board.makeMove(move);
-               //recurse
-               Move nextMove =
-                     this.pickBestMove(Board.calculateOppID(id), max - 1);
-               if (-1 * nextMove.value > bestValue) {
-                  bestValue = -1 * nextMove.value;
-                  bestMove = move;
-               }
-               //unchoose
-               this.board.unmakeMove(move, boards);
-            }
-            return bestMove;
-         }
+      if (moves.size() < 1) {
+         throw new IllegalStateException();
       }
-      return null;//TODO
+      if (max == 1) {//base case
+         Queue<Move> bestMoves = new PriorityQueue<Move>();
+         while (!moves.isEmpty()) {
+            Move move = moves.pop();
+            this.setValue(move);
+            bestMoves.offer(move);
+         }
+         return bestMoves.remove();//returns best value move
+      } else {
+         int bestValue = Integer.MIN_VALUE;
+         Move bestMove = null;
+         //recursive backtracking
+         while (!moves.isEmpty()) {
+            Move move = moves.pop();
+            if (this.isWinningMove(move)) {
+               return move;
+            }
+            //choose
+            String boards = this.board.makeMove(move);
+            //recurse
+            Move nextMove =
+                  this.pickBestMove(Board.calculateOppID(id), max - 1);
+            if (-1 * nextMove.value > bestValue) {
+               bestValue = -1 * nextMove.value;
+               bestMove = move;
+            }
+            //unchoose
+            this.board.unmakeMove(move, boards);
+         }
+         return bestMove;
+      }
    }
    
    private boolean isWinningMove(Move move) {

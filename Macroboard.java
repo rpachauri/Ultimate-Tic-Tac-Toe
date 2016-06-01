@@ -153,7 +153,7 @@ public class Macroboard extends Board<Microboard> {
    public String makeMove(Move move) {
       String boards = this.getBoards();
       Microboard microboard =
-            ((Microboard)this.board[move.boardRow][move.boardCol]);
+            (Microboard)this.board[move.boardRow][move.boardCol];
       if (microboard.getID() != -1) {
          throw new IllegalStateException();
       }
@@ -168,7 +168,7 @@ public class Macroboard extends Board<Microboard> {
       Microboard nextMicroboard = (Microboard)this.board[move.row][move.col];
       if (nextMicroboard.getID() == 0 && !nextMicroboard.isFull()) {
          this.changeIDs(-1, 0);
-         microboard.setID(-1);
+         nextMicroboard.setID(-1);
       } else {
          this.changeIDs(0, -1);
       }
@@ -209,9 +209,11 @@ public class Macroboard extends Board<Microboard> {
             for (int col = 0; col < Board.COLS; col++) {
                Microboard microboard =
                      (Microboard)this.board[row][col];
-               result += microboard.getRow(microRow);
+               result += microboard.getRow(microRow) + "\t";
             }
+            result += "\n";
          }
+         result += "\n";
       }
       return result.substring(0, result.length() - 1);//takes care of fencepost
    }
