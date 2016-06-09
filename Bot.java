@@ -105,7 +105,7 @@ public class Bot {
    private void setValue(Move move) {
       int boardValue = this.getBoardValue(move);
       int macroboardValue = this.getMacroboardValue(move);
-      move.value = 10 * macroboardValue + boardValue;
+      move.value = 100 * macroboardValue + boardValue;
    }
    
    private int getBoardValue(Move move) {
